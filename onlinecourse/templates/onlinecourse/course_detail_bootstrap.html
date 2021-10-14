@@ -53,7 +53,34 @@
             <!-- Task: show questions and choices -->
             <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here
             https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
-
+            {% if user.is_authenticated %}
+            <form id="questionform" action="{% url 'onlinecourse:submission' course_id=course.id %}" method="post">
+                {% csrf_token %}
+                {% for lesson in course.lesson_set.all %} 
+                    {% for question in lesson.question_set.all %}
+                    <div class="form-group">
+                        <div class="card mt-1">
+                            <div class="card-header"><h5>{{question.question_text}}</h5></div>
+                            <ul>
+                            {% for choice in question.choice_set.all %}
+                            
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" name="choice_{{choice.id}}"
+                                        class="form-check-input" id="{{choice.id}}"
+                                        value="{{choice.id}}">
+                                    {{ choice.choice_content }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                 {% endfor %}
+                 <input class="btn btn-success btn-block" type="submit" value="Submit">
+                </form>
+            {% endif %} 
             <!--
 
             A collapse example here:
